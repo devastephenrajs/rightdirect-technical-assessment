@@ -1,0 +1,189 @@
+---
+interface ProcessStep {
+  number: string;
+  title: string;
+  description: string;
+}
+
+interface Props {
+  title: string;
+  description: string;
+  steps?: ProcessStep[];
+}
+
+const {
+  title,
+  description,
+  steps = []
+} = Astro.props;
+---
+
+<section class="process-section">
+  <div class="container">
+    <div class="process-heading">
+      <h2>{title}</h2>
+      <p>{description}</p>
+    </div>
+
+    <div class="process-grid">
+      {steps.map((step) => (
+        <article class="process-card">
+          <div class="step-number">{step.number}</div>
+
+          <h3>{step.title}</h3>
+
+          <p>{step.description}</p>
+        </article>
+      ))}
+    </div>
+  </div>
+</section>
+
+<style>
+  .process-section {
+    padding: 80px 0;
+    background: #ffffff;
+  }
+
+  .process-heading {
+    text-align: center;
+    max-width: 900px;
+    margin: 0 auto 55px;
+  }
+
+  .process-heading h2 {
+    color: var(--primary);
+    font-size: 38px;
+    line-height: 1.2;
+    font-weight: 500;
+  }
+
+  .process-heading p {
+    margin-top: 18px;
+    font-size: 16px;
+    line-height: 1.7;
+    color: #333333;
+  }
+
+  .process-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 20px;
+  }
+
+  .process-card {
+    position: relative;
+
+    min-height: 310px;
+    padding: 28px;
+
+    border: 1px solid #e0e6eb;
+    border-radius: 14px;
+
+    background: #ffffff;
+
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.04);
+
+    overflow: hidden;
+
+    transition:
+      transform 0.3s ease,
+      box-shadow 0.3s ease,
+      border-color 0.3s ease;
+  }
+
+  /* Top blue line */
+  .process-card::before {
+    content: "";
+
+    position: absolute;
+    top: 0;
+    left: 0;
+
+    width: 100%;
+    height: 4px;
+
+    background: var(--primary);
+
+    transform: scaleX(0);
+    transform-origin: left;
+
+    transition: transform 0.35s ease;
+  }
+
+  /* Hover */
+  .process-card:hover {
+    transform: translateY(-5px);
+
+    border-color: rgba(0, 82, 143, 0.25);
+
+    box-shadow: 0 16px 35px rgba(0, 82, 143, 0.12);
+  }
+
+  .process-card:hover::before {
+    transform: scaleX(1);
+  }
+
+  .step-number {
+    text-align: right;
+
+    color: var(--primary);
+
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 2px;
+
+    transition: color 0.3s ease;
+  }
+
+  .process-card h3 {
+    margin-top: 55px;
+
+    color: var(--primary);
+
+    font-size: 21px;
+    font-weight: 500;
+
+    transition: color 0.3s ease;
+  }
+
+  .process-card p {
+    margin-top: 14px;
+
+    font-size: 15px;
+    line-height: 1.6;
+
+    color: #333333;
+  }
+
+  @media (max-width: 950px) {
+    .process-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  @media (max-width: 600px) {
+    .process-section {
+      padding: 60px 0;
+    }
+
+    .process-heading h2 {
+      font-size: 30px;
+    }
+
+    .process-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .process-card {
+      min-height: auto;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .process-card,
+    .process-card::before {
+      transition: none;
+    }
+  }
+</style>

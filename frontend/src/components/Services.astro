@@ -1,0 +1,231 @@
+---
+interface ServiceItem {
+  title: string;
+  description: string;
+  ctaText?: string;
+  ctaUrl?: string;
+}
+
+interface Props {
+  services?: ServiceItem[];
+}
+
+const { services = [] } = Astro.props;
+---
+
+<section class="services-section" id="services">
+  <div class="container services-grid">
+    {services.map((service) => (
+      <article class="service-card">
+        <div>
+          <h2>{service.title}</h2>
+          <p>{service.description}</p>
+        </div>
+
+        {service.ctaText && service.ctaUrl && (
+          <a href={service.ctaUrl} class="service-link">
+            {service.ctaText}
+            <span class="service-arrow" aria-hidden="true">↗</span>
+          </a>
+        )}
+      </article>
+    ))}
+  </div>
+</section>
+
+<style>
+  .services-section {
+    background: #ffffff;
+    padding: 70px 0;
+  }
+
+  .services-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+  }
+
+  .service-card {
+    position: relative;
+
+    min-height: 420px;
+    padding: 45px 30px;
+
+    background-color: #ffffff;
+
+    border-right: 1px solid #dce3ea;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+
+    cursor: pointer;
+
+    transition:
+      background-color 0.35s ease,
+      transform 0.35s ease,
+      box-shadow 0.35s ease;
+  }
+
+  .service-card:first-child {
+    border-left: 1px solid #dce3ea;
+  }
+
+  .service-card h2 {
+    margin: 0;
+
+    color: var(--primary);
+
+    font-size: 30px;
+    line-height: 1.2;
+    font-weight: 500;
+
+    transition: color 0.35s ease;
+  }
+
+  .service-card p {
+    margin-top: 35px;
+
+    color: #202020;
+
+    font-size: 16px;
+    line-height: 1.6;
+
+    transition: color 0.35s ease;
+  }
+
+  .service-link {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    color: var(--primary);
+
+    font-weight: 600;
+
+    transition: color 0.35s ease;
+  }
+
+  .service-arrow {
+    width: 38px;
+    height: 38px;
+
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 50%;
+
+    color: var(--primary);
+
+    transition:
+      background-color 0.35s ease,
+      color 0.35s ease,
+      transform 0.35s ease;
+  }
+
+  /* ==========================
+     HOVER EFFECT
+  ========================== */
+
+  .service-card:hover {
+    background-color: #07558c;
+
+    transform: translateY(-5px);
+
+    box-shadow: 0 16px 30px rgba(0, 82, 143, 0.2);
+
+    z-index: 2;
+  }
+
+  .service-card:hover h2 {
+    color: #ffffff;
+  }
+
+  .service-card:hover p {
+    color: #ffffff;
+  }
+
+  .service-card:hover .service-link {
+    color: #ffffff;
+  }
+
+  .service-card:hover .service-arrow {
+    background-color: #ffffff;
+    color: #07558c;
+
+    transform: rotate(45deg);
+  }
+
+  /* Keyboard accessibility */
+  .service-card:focus-within {
+    background-color: #07558c;
+  }
+
+  .service-card:focus-within h2,
+  .service-card:focus-within p,
+  .service-card:focus-within .service-link {
+    color: #ffffff;
+  }
+
+  .service-card:focus-within .service-arrow {
+    background-color: #ffffff;
+    color: #07558c;
+  }
+
+  /* ==========================
+     TABLET
+  ========================== */
+
+  @media (max-width: 950px) {
+    .services-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+
+    .service-card {
+      border-bottom: 1px solid #dce3ea;
+    }
+  }
+
+  /* ==========================
+     MOBILE
+  ========================== */
+
+  @media (max-width: 600px) {
+    .services-section {
+      padding: 50px 0;
+    }
+
+    .services-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .service-card {
+      min-height: 300px;
+
+      padding: 35px 25px;
+
+      border-left: 1px solid #dce3ea;
+      border-right: 1px solid #dce3ea;
+      border-bottom: 1px solid #dce3ea;
+    }
+
+    .service-card h2 {
+      font-size: 27px;
+    }
+
+    .service-card p {
+      margin-top: 25px;
+      font-size: 15px;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .service-card,
+    .service-card h2,
+    .service-card p,
+    .service-link,
+    .service-arrow {
+      transition: none;
+    }
+  }
+</style>

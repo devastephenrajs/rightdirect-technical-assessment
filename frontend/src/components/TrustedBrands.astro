@@ -1,0 +1,193 @@
+---
+interface BrandLogo {
+  url?: string;
+  alt?: string;
+}
+
+interface Props {
+  title: string;
+  brands?: BrandLogo[];
+}
+
+const {
+  title,
+  brands = []
+} = Astro.props;
+---
+
+<section class="brands-section">
+  <div class="container">
+    <div class="brands-heading">
+      <h2>{title}</h2>
+    </div>
+  </div>
+
+  <div class="brands-slider">
+    <div class="brands-track">
+
+      <!-- First set -->
+      {brands?.map((brand) => (
+        <div class="brand-card">
+          {brand.url && (
+            <img
+              src={brand.url}
+              alt={brand.alt || "Brand logo"}
+              loading="lazy"
+            />
+          )}
+        </div>
+      ))}
+
+      <!-- Duplicate set for continuous loop -->
+      {brands?.map((brand) => (
+        <div class="brand-card" aria-hidden="true">
+          {brand.url && (
+            <img
+              src={brand.url}
+              alt=""
+              loading="lazy"
+            />
+          )}
+        </div>
+      ))}
+
+    </div>
+  </div>
+</section>
+<style>
+  .brands-section {
+    padding: 70px 0 80px;
+    background: #ffffff;
+    overflow: hidden;
+  }
+
+  .brands-heading {
+    text-align: center;
+    margin-bottom: 55px;
+  }
+
+  .brands-heading h2 {
+    color: var(--primary);
+    font-size: 36px;
+    line-height: 1.2;
+    font-weight: 500;
+  }
+
+  /* Slider visible area */
+  .brands-slider {
+    width: 100%;
+    overflow: hidden;
+  }
+
+  /* Moving logos */
+  .brands-track {
+    display: flex;
+    align-items: center;
+    width: max-content;
+
+    animation: brand-scroll 25s linear infinite;
+  }
+
+  .brand-card {
+    width: 180px;
+    min-width: 180px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    padding: 10px 25px;
+  }
+
+  .brand-card img {
+    display: block;
+
+    width: 100%;
+    max-width: 135px;
+    height: 60px;
+
+    object-fit: contain;
+
+    /* Default grayscale */
+    filter: grayscale(100%);
+    opacity: 0.55;
+
+    transition:
+      filter 0.3s ease,
+      opacity 0.3s ease,
+      transform 0.3s ease;
+  }
+
+  /* Mouse over slider = stop animation */
+  .brands-slider:hover .brands-track {
+    animation-play-state: paused;
+  }
+
+  /* Only hovered logo becomes original color */
+  .brand-card:hover img {
+    filter: grayscale(0%);
+    opacity: 1;
+    transform: scale(1.06);
+  }
+
+  /* Move one duplicated set to left */
+  @keyframes brand-scroll {
+    from {
+      transform: translateX(0);
+    }
+
+    to {
+      transform: translateX(-50%);
+    }
+  }
+
+  /* Tablet */
+  @media (max-width: 950px) {
+    .brand-card {
+      width: 160px;
+      min-width: 160px;
+    }
+
+    .brand-card img {
+      max-width: 120px;
+      height: 55px;
+    }
+  }
+
+  /* Mobile */
+  @media (max-width: 600px) {
+    .brands-section {
+      padding: 55px 0 65px;
+    }
+
+    .brands-heading {
+      margin-bottom: 40px;
+    }
+
+    .brands-heading h2 {
+      font-size: 30px;
+    }
+
+    .brands-track {
+      animation-duration: 20s;
+    }
+
+    .brand-card {
+      width: 140px;
+      min-width: 140px;
+      padding: 10px 20px;
+    }
+
+    .brand-card img {
+      max-width: 105px;
+      height: 45px;
+    }
+  }
+
+  /* Accessibility */
+  @media (prefers-reduced-motion: reduce) {
+    .brands-track {
+      animation: none;
+    }
+  }
+</style>

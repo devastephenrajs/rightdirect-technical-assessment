@@ -1,0 +1,209 @@
+---
+interface Props {
+  title: string;
+  description?: string;
+  image?: {
+    url?: string;
+    alt?: string;
+  };
+  ctaText?: string;
+  ctaUrl?: string;
+}
+
+const {
+  title,
+  description,
+  image,
+  ctaText,
+  ctaUrl
+} = Astro.props;
+---
+
+<section
+  class="bottom-cta"
+  style={image?.url ? `background-image: url('${image.url}')` : undefined}
+>
+  <div class="bottom-cta-overlay"></div>
+
+  <div class="container bottom-cta-container">
+    <div class="bottom-cta-content">
+      <h2>{title}</h2>
+
+      {description && (
+        <p>{description}</p>
+      )}
+
+      {ctaText && ctaUrl && (
+        <a href={ctaUrl} class="bottom-cta-button">
+          {ctaText}
+          <span aria-hidden="true">→</span>
+        </a>
+      )}
+    </div>
+  </div>
+</section>
+
+<style>
+  .bottom-cta {
+    position: relative;
+    min-height: 430px;
+
+    display: flex;
+    align-items: center;
+
+    background-position: center;
+    background-size: cover;
+    background-repeat: no-repeat;
+
+    overflow: hidden;
+  }
+
+  .bottom-cta-overlay {
+    position: absolute;
+    inset: 0;
+
+    background: linear-gradient(
+      90deg,
+      rgba(0, 55, 100, 0.9) 0%,
+      rgba(0, 75, 130, 0.78) 45%,
+      rgba(0, 50, 90, 0.35) 100%
+    );
+  }
+
+  .bottom-cta-container {
+    position: relative;
+    z-index: 1;
+
+    width: min(92%, 1120px);
+    margin: 0 auto;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .bottom-cta-content {
+    width: 100%;
+    max-width: 720px;
+
+    padding: 75px 0;
+
+    text-align: center;
+    color: #ffffff;
+  }
+
+  .bottom-cta-content h2 {
+    margin: 0;
+
+    color: #ffffff;
+
+    font-size: 42px;
+    line-height: 1.2;
+    font-weight: 500;
+  }
+
+  .bottom-cta-content p {
+    max-width: 650px;
+
+    margin: 20px auto 0;
+
+    color: rgba(255, 255, 255, 0.95);
+
+    font-size: 16px;
+    line-height: 1.7;
+  }
+
+  .bottom-cta-button {
+    margin-top: 30px;
+
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+
+    padding: 13px 26px;
+
+    background: #ffffff;
+    color: var(--primary);
+
+    border-radius: 999px;
+
+    font-size: 15px;
+    font-weight: 600;
+
+    transition:
+      transform 0.25s ease,
+      background 0.25s ease,
+      box-shadow 0.25s ease;
+  }
+
+  .bottom-cta-button:hover {
+    transform: translateY(-2px);
+
+    background: #f5f7fa;
+
+    box-shadow: 0 8px 18px rgba(0, 0, 0, 0.15);
+  }
+
+  /* Tablet */
+  @media (max-width: 900px) {
+    .bottom-cta {
+      min-height: 400px;
+    }
+
+    .bottom-cta-content {
+      max-width: 650px;
+      padding: 65px 0;
+    }
+
+    .bottom-cta-content h2 {
+      font-size: 36px;
+    }
+
+    .bottom-cta-content p {
+      font-size: 15px;
+    }
+  }
+
+  /* Mobile */
+  @media (max-width: 600px) {
+    .bottom-cta {
+      min-height: 360px;
+
+      background-position: center;
+    }
+
+    .bottom-cta-overlay {
+      background: rgba(0, 65, 110, 0.78);
+    }
+
+    .bottom-cta-container {
+      width: min(90%, 1120px);
+    }
+
+    .bottom-cta-content {
+      max-width: 100%;
+      padding: 55px 0;
+    }
+
+    .bottom-cta-content h2 {
+      font-size: 30px;
+      line-height: 1.25;
+    }
+
+    .bottom-cta-content p {
+      margin-top: 16px;
+
+      font-size: 15px;
+      line-height: 1.6;
+    }
+
+    .bottom-cta-button {
+      margin-top: 25px;
+
+      padding: 12px 22px;
+
+      font-size: 14px;
+    }
+  }
+</style>

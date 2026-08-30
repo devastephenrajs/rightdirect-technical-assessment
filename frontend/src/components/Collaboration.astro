@@ -1,0 +1,256 @@
+---
+interface CollaborationItem {
+  title: string;
+  description: string;
+  image?: {
+    url?: string;
+    alt?: string;
+  };
+}
+
+interface Props {
+  title: string;
+  description?: string;
+  items?: CollaborationItem[];
+}
+
+const {
+  title,
+  description,
+  items = []
+} = Astro.props;
+---
+
+<section class="collaboration-section">
+  <div class="container">
+    <div class="collaboration-heading">
+      <h2>{title}</h2>
+
+      {description && (
+        <p>{description}</p>
+      )}
+    </div>
+
+    <div class="collaboration-list">
+      {items?.map((item, index) => (
+        <article
+          class:list={[
+            "collaboration-row",
+            { reverse: index % 2 !== 0 }
+          ]}
+        >
+          <div class="collaboration-image-wrap">
+            {item.image?.url && (
+              <img
+                src={item.image.url}
+                alt={item.image.alt || item.title}
+                loading="lazy"
+                class="collaboration-image"
+              />
+            )}
+          </div>
+
+          <div class="collaboration-content">
+            <h3>{item.title}</h3>
+            <p>{item.description}</p>
+          </div>
+        </article>
+      ))}
+    </div>
+  </div>
+</section>
+
+<style>
+  .collaboration-section {
+    padding: 85px 0 100px;
+    background: #ffffff;
+  }
+
+  /* Main heading */
+  .collaboration-heading {
+    max-width: 950px;
+    margin: 0 auto 70px;
+    text-align: center;
+  }
+
+  .collaboration-heading h2 {
+    color: var(--primary);
+    font-size: 38px;
+    line-height: 1.2;
+    font-weight: 500;
+  }
+
+  .collaboration-heading p {
+    max-width: 850px;
+    margin: 20px auto 0;
+    color: #202020;
+    font-size: 16px;
+    line-height: 1.7;
+  }
+
+  /* All rows */
+  .collaboration-list {
+    max-width: 1000px;
+    margin: 0 auto;
+
+    display: flex;
+    flex-direction: column;
+    gap: 65px;
+  }
+
+  /* Image left - content right */
+  .collaboration-row {
+    display: grid;
+    grid-template-columns: 260px 1fr;
+    gap: 55px;
+    align-items: center;
+  }
+
+  /* Second row: content left - image right */
+  .collaboration-row.reverse {
+    grid-template-columns: 1fr 260px;
+  }
+
+  .collaboration-row.reverse .collaboration-image-wrap {
+    order: 2;
+  }
+
+  .collaboration-row.reverse .collaboration-content {
+    order: 1;
+    text-align: right;
+  }
+
+  /* Round image */
+  .collaboration-image-wrap {
+    width: 260px;
+    height: 260px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .collaboration-image {
+    width: 245px;
+    height: 245px;
+
+    display: block;
+
+    object-fit: cover;
+    object-position: center;
+
+    border-radius: 50%;
+
+    box-shadow:
+      0 15px 25px rgba(0, 0, 0, 0.10),
+      0 4px 8px rgba(0, 0, 0, 0.05);
+  }
+
+  /* Content */
+  .collaboration-content {
+    min-width: 0;
+  }
+
+  .collaboration-content h3 {
+    margin: 0;
+
+    color: var(--primary);
+    font-size: 21px;
+    line-height: 1.35;
+    font-weight: 500;
+  }
+
+  .collaboration-content p {
+    margin-top: 14px;
+
+    color: #202020;
+    font-size: 15px;
+    line-height: 1.65;
+  }
+
+  /* Tablet */
+  @media (max-width: 900px) {
+    .collaboration-list {
+      gap: 55px;
+    }
+
+    .collaboration-row {
+      grid-template-columns: 210px 1fr;
+      gap: 35px;
+    }
+
+    .collaboration-row.reverse {
+      grid-template-columns: 1fr 210px;
+    }
+
+    .collaboration-image-wrap {
+      width: 210px;
+      height: 210px;
+    }
+
+    .collaboration-image {
+      width: 200px;
+      height: 200px;
+    }
+  }
+
+  /* Mobile */
+  @media (max-width: 650px) {
+    .collaboration-section {
+      padding: 60px 0 70px;
+    }
+
+    .collaboration-heading {
+      margin-bottom: 50px;
+    }
+
+    .collaboration-heading h2 {
+      font-size: 30px;
+    }
+
+    .collaboration-heading p {
+      font-size: 15px;
+    }
+
+    .collaboration-list {
+      gap: 55px;
+    }
+
+    .collaboration-row,
+    .collaboration-row.reverse {
+      display: flex;
+      flex-direction: column;
+
+      gap: 22px;
+
+      text-align: center;
+    }
+
+    .collaboration-row.reverse .collaboration-image-wrap {
+      order: 1;
+    }
+
+    .collaboration-row.reverse .collaboration-content {
+      order: 2;
+      text-align: center;
+    }
+
+    .collaboration-image-wrap {
+      width: 200px;
+      height: 200px;
+    }
+
+    .collaboration-image {
+      width: 190px;
+      height: 190px;
+    }
+
+    .collaboration-content h3 {
+      font-size: 20px;
+    }
+
+    .collaboration-content p {
+      font-size: 15px;
+    }
+  }
+</style>

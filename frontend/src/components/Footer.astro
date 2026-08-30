@@ -1,0 +1,329 @@
+---
+interface FooterLink {
+  label: string;
+  url: string;
+}
+
+interface FooterGroup {
+  groupTitle: string;
+  links?: FooterLink[];
+}
+
+interface SocialLink {
+  platform: string;
+  url: string;
+}
+
+interface Props {
+  description?: string;
+  footerLinks?: FooterGroup[];
+  contactEmail?: string;
+  contactPhone?: string;
+  socialLinks?: SocialLink[];
+  copyrightText?: string;
+}
+
+const {
+  description,
+  footerLinks = [],
+  contactEmail,
+  contactPhone,
+  socialLinks = [],
+  copyrightText
+} = Astro.props;
+---
+
+<footer class="site-footer">
+  <div class="container footer-main">
+    <div class="footer-about">
+      <h2>RightDirect</h2>
+
+      {description && (
+        <p>{description}</p>
+      )}
+    </div>
+
+    {footerLinks?.map((group) => (
+      <div class="footer-group">
+        <h3>{group.groupTitle}</h3>
+
+        <ul>
+          {group.links?.map((link) => (
+            <li>
+              <a href={link.url}>
+                {link.label}
+              </a>
+            </li>
+          ))}
+        </ul>
+      </div>
+    ))}
+
+    <div class="footer-contact">
+      <h3>Contact</h3>
+
+      {contactEmail && (
+        <a href={`mailto:${contactEmail}`}>
+          {contactEmail}
+        </a>
+      )}
+
+      {contactPhone && (
+        <a href={`tel:${contactPhone}`}>
+          {contactPhone}
+        </a>
+      )}
+
+      {socialLinks.length > 0 && (
+        <div class="social-links">
+          {socialLinks.map((social) => (
+            <a
+              href={social.url}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              {social.platform}
+            </a>
+          ))}
+        </div>
+      )}
+    </div>
+  </div>
+
+  <div class="footer-bottom">
+    <div class="container">
+      {copyrightText && (
+        <p>{copyrightText}</p>
+      )}
+    </div>
+  </div>
+</footer>
+
+<style>
+  .site-footer {
+    background: #064d7d;
+    color: #ffffff;
+  }
+
+  /* =========================
+     MAIN FOOTER
+  ========================= */
+
+  .footer-main {
+    padding-top: 60px;
+    padding-bottom: 55px;
+
+    display: grid;
+
+    /* 5 footer blocks */
+    grid-template-columns:
+      1.4fr
+      1fr
+      0.9fr
+      1.2fr
+      1fr;
+
+    gap: 45px;
+
+    align-items: start;
+  }
+
+  /* =========================
+     ABOUT
+  ========================= */
+
+  .footer-about h2 {
+    margin: 0;
+
+    color: #ffffff;
+
+    font-size: 28px;
+    line-height: 1.2;
+    font-weight: 500;
+  }
+
+  .footer-about p {
+    max-width: 280px;
+
+    margin-top: 18px;
+
+    color: rgba(255, 255, 255, 0.85);
+
+    font-size: 14px;
+    line-height: 1.7;
+  }
+
+  /* =========================
+     LINK GROUPS
+  ========================= */
+
+  .footer-group h3,
+  .footer-contact h3 {
+    margin: 0 0 20px;
+
+    color: #ffffff;
+
+    font-size: 15px;
+    font-weight: 600;
+  }
+
+  .footer-group ul {
+    margin: 0;
+    padding: 0;
+
+    list-style: none;
+  }
+
+  .footer-group li {
+    margin: 0;
+  }
+
+  .footer-group li + li {
+    margin-top: 11px;
+  }
+
+  .footer-group a {
+    color: rgba(255, 255, 255, 0.82);
+
+    font-size: 13px;
+    line-height: 1.5;
+
+    transition: color 0.2s ease;
+  }
+
+  .footer-group a:hover {
+    color: #ffffff;
+  }
+
+  /* =========================
+     CONTACT
+  ========================= */
+
+  .footer-contact > a {
+    display: block;
+
+    color: rgba(255, 255, 255, 0.85);
+
+    font-size: 13px;
+    line-height: 1.5;
+
+    transition: color 0.2s ease;
+  }
+
+  .footer-contact > a:hover {
+    color: #ffffff;
+  }
+
+  .footer-contact > a + a {
+    margin-top: 10px;
+  }
+
+  /* =========================
+     SOCIAL LINKS
+  ========================= */
+
+  .social-links {
+    margin-top: 22px;
+
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .social-links a {
+    display: inline-flex;
+
+    align-items: center;
+    justify-content: center;
+
+    padding: 7px 12px;
+
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    border-radius: 999px;
+
+    color: #ffffff;
+
+    font-size: 12px;
+
+    transition:
+      background 0.2s ease,
+      border-color 0.2s ease;
+  }
+
+  .social-links a:hover {
+    background: rgba(255, 255, 255, 0.12);
+    border-color: rgba(255, 255, 255, 0.6);
+  }
+
+  /* =========================
+     COPYRIGHT
+  ========================= */
+
+  .footer-bottom {
+    border-top: 1px solid rgba(255, 255, 255, 0.15);
+  }
+
+  .footer-bottom .container {
+    padding-top: 18px;
+    padding-bottom: 18px;
+  }
+
+  .footer-bottom p {
+    margin: 0;
+
+    text-align: center;
+
+    color: rgba(255, 255, 255, 0.7);
+
+    font-size: 12px;
+  }
+
+  /* =========================
+     TABLET
+  ========================= */
+
+  @media (max-width: 1050px) {
+    .footer-main {
+      grid-template-columns: repeat(3, 1fr);
+
+      gap: 45px 35px;
+    }
+  }
+
+  /* =========================
+     SMALL TABLET
+  ========================= */
+
+  @media (max-width: 750px) {
+    .footer-main {
+      grid-template-columns: repeat(2, 1fr);
+
+      padding-top: 50px;
+      padding-bottom: 45px;
+    }
+  }
+
+  /* =========================
+     MOBILE
+  ========================= */
+
+  @media (max-width: 520px) {
+    .footer-main {
+      grid-template-columns: 1fr;
+
+      gap: 35px;
+
+      padding-top: 45px;
+      padding-bottom: 40px;
+    }
+
+    .footer-about p {
+      max-width: 100%;
+    }
+
+    .footer-bottom .container {
+      padding-top: 15px;
+      padding-bottom: 15px;
+    }
+  }
+</style>

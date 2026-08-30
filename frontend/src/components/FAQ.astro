@@ -1,0 +1,150 @@
+---
+interface FAQItem {
+  question: string;
+  answer: string;
+}
+
+interface Props {
+  title: string;
+  faqs?: FAQItem[];
+}
+
+const {
+  title,
+  faqs = []
+} = Astro.props;
+---
+
+<section class="faq-section">
+  <div class="container">
+    <div class="faq-heading">
+      <h2>{title}</h2>
+    </div>
+
+    <div class="faq-list">
+      {faqs?.map((faq) => (
+        <details class="faq-item">
+          <summary>
+            <span>{faq.question}</span>
+            <span class="faq-icon" aria-hidden="true">+</span>
+          </summary>
+
+          <div class="faq-answer">
+            <p>{faq.answer}</p>
+          </div>
+        </details>
+      ))}
+    </div>
+  </div>
+</section>
+
+<style>
+  .faq-section {
+    padding: 85px 0;
+    background: #f4f6f8;
+  }
+
+  .faq-heading {
+    text-align: center;
+    margin-bottom: 50px;
+  }
+
+  .faq-heading h2 {
+    color: var(--primary);
+    font-size: 38px;
+    line-height: 1.2;
+    font-weight: 500;
+  }
+
+  .faq-list {
+    max-width: 900px;
+    margin: 0 auto;
+
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+
+  .faq-item {
+    background: #ffffff;
+    border: 1px solid #e0e6eb;
+    border-radius: 12px;
+    overflow: hidden;
+  }
+
+  .faq-item summary {
+    min-height: 70px;
+    padding: 20px 24px;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+
+    color: var(--primary);
+    font-size: 17px;
+    font-weight: 500;
+
+    cursor: pointer;
+    list-style: none;
+  }
+
+  .faq-item summary::-webkit-details-marker {
+    display: none;
+  }
+
+  .faq-icon {
+    flex-shrink: 0;
+
+    width: 32px;
+    height: 32px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 50%;
+    background: var(--primary);
+    color: #ffffff;
+
+    font-size: 22px;
+    font-weight: 400;
+
+    transition: transform 0.25s ease;
+  }
+
+  .faq-item[open] .faq-icon {
+    transform: rotate(45deg);
+  }
+
+  .faq-answer {
+    padding: 0 24px 22px;
+  }
+
+  .faq-answer p {
+    max-width: 800px;
+
+    color: #333333;
+    font-size: 15px;
+    line-height: 1.7;
+  }
+
+  @media (max-width: 600px) {
+    .faq-section {
+      padding: 60px 0;
+    }
+
+    .faq-heading h2 {
+      font-size: 30px;
+    }
+
+    .faq-item summary {
+      padding: 18px;
+      font-size: 16px;
+    }
+
+    .faq-answer {
+      padding: 0 18px 18px;
+    }
+  }
+</style>

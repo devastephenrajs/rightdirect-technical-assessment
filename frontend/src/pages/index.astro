@@ -1,0 +1,250 @@
+---
+import Layout from "../layouts/Layout.astro";
+import Header from "../components/Header.astro";
+import Hero from "../components/Hero.astro";
+import Stats from "../components/Stats.astro";
+import Services from "../components/Services.astro";
+import Process from "../components/Process.astro";
+import SuccessStories from "../components/SuccessStories.astro";
+import TrustedBrands from "../components/TrustedBrands.astro";
+import Testimonials from "../components/Testimonials.astro";
+import Collaboration from "../components/Collaboration.astro";
+import FAQ from "../components/FAQ.astro";
+import BottomCTA from "../components/BottomCTA.astro";
+import Footer from "../components/Footer.astro";
+
+import { sanityClient } from "../lib/sanity";
+
+const homePageQuery = `*[_type == "homePage"][0]{
+  seoTitle,
+  seoDescription,
+  heroTitle,
+  heroDescription,
+  ctaText,
+  ctaUrl,
+  statsTitle,
+  statsDescription,
+  stats,
+  services,
+  processTitle,
+  processDescription,
+  processSteps,
+  successStoriesTitle,
+successStoriesDescription,
+
+successStories[]{
+  category,
+  companyName,
+  title,
+  description,
+  ctaText,
+  ctaUrl,
+  image{
+    "url": asset->url,
+    alt
+  }
+},
+
+successStoriesMoreTitle,
+successStoriesMoreDescription,
+successStoriesMoreCtaText,
+successStoriesMoreCtaUrl,
+brandsTitle,
+
+"brandLogos": coalesce(brandLogos[]{
+  "url": asset->url,
+  alt
+}, []),
+
+testimonialsTitle,
+
+"testimonials": coalesce(testimonials[]{
+  company,
+  quote,
+  personName,
+  designation,
+  personImage{
+    "url": asset->url,
+    alt
+  }
+}, []),
+
+collaborationTitle,
+collaborationDescription,
+
+"collaborationItems": coalesce(collaborationItems[]{
+  title,
+  description,
+  image{
+    "url": asset->url,
+    alt
+  }
+}, []),
+
+faqTitle,
+
+"faqs": coalesce(faqs[]{
+  category,
+  question,
+  answer,
+  ctaText,
+  ctaUrl
+}, []),
+
+faqTitle,
+
+"faqs": coalesce(faqs[]{
+  category,
+  question,
+  answer,
+  ctaText,
+  ctaUrl
+}, []),
+
+bottomCtaTitle,
+bottomCtaDescription,
+
+bottomCtaImage{
+  "url": asset->url,
+  alt
+},
+
+bottomCtaText,
+bottomCtaUrl
+}`;
+
+const siteSettingsQuery = `*[_type == "siteSettings"][0]{
+  navigation,
+  headerCtaText,
+  headerCtaUrl,
+
+  footerDescription,
+
+  "footerLinks": coalesce(footerLinks[]{
+    groupTitle,
+    "links": coalesce(links[]{
+      label,
+      url
+    }, [])
+  }, []),
+
+  contactEmail,
+  contactPhone,
+
+  "socialLinks": coalesce(socialLinks[]{
+    platform,
+    url
+  }, []),
+
+  copyrightText
+}`;
+
+const [homePage, siteSettings] = await Promise.all([
+  sanityClient.fetch(homePageQuery),
+  sanityClient.fetch(siteSettingsQuery),
+]);
+
+if (!homePage) {
+  throw new Error("Home Page content not found in Sanity");
+}
+
+if (!siteSettings) {
+  throw new Error("Site Settings content not found in Sanity");
+}
+---
+
+<Layout
+  title={homePage.seoTitle}
+  description={homePage.seoDescription}
+>
+  <Header
+    navigation={siteSettings.navigation}
+    ctaText={siteSettings.headerCtaText}
+    ctaUrl={siteSettings.headerCtaUrl}
+  />
+
+  <main>
+    <Hero
+      title={homePage.heroTitle}
+      description={homePage.heroDescription}
+      ctaText={homePage.ctaText}
+      ctaUrl={homePage.ctaUrl}
+    />
+
+    <Stats
+      title={homePage.statsTitle}
+      description={homePage.statsDescription}
+      stats={homePage.stats}
+    />
+    
+    <Services services={homePage.services} />
+
+    <Process
+  title={homePage.processTitle}
+  description={homePage.processDescription}
+  steps={homePage.processSteps}
+/>
+
+<SuccessStories
+  title={homePage.successStoriesTitle}
+  description={homePage.successStoriesDescription}
+  stories={homePage.successStories?.map((story) => ({
+    client: story.companyName,
+    category: story.category,
+    title: story.title,
+    description: story.description,
+    ctaText: story.ctaText,
+    ctaUrl: story.ctaUrl,
+    image: story.image,
+  }))}
+  moreTitle={homePage.successStoriesMoreTitle}
+  moreDescription={homePage.successStoriesMoreDescription}
+  moreCtaText={homePage.successStoriesMoreCtaText}
+  moreCtaUrl={homePage.successStoriesMoreCtaUrl}
+/>
+
+<TrustedBrands
+  title={homePage.brandsTitle}
+  brands={homePage.brandLogos}
+/>
+
+<Testimonials
+  title={homePage.testimonialsTitle}
+  testimonials={homePage.testimonials?.map((item) => ({
+    name: item.personName,
+    role: item.designation,
+    company: item.company,
+    quote: item.quote,
+    image: item.personImage,
+  }))}
+/>
+
+<Collaboration
+  title={homePage.collaborationTitle}
+  description={homePage.collaborationDescription}
+  items={homePage.collaborationItems}
+/>
+
+<FAQ
+  title={homePage.faqTitle}
+  faqs={homePage.faqs}
+/>
+
+<BottomCTA
+  title={homePage.bottomCtaTitle}
+  description={homePage.bottomCtaDescription}
+  image={homePage.bottomCtaImage}
+  ctaText={homePage.bottomCtaText}
+  ctaUrl={homePage.bottomCtaUrl}
+/>
+
+<Footer
+  description={siteSettings.footerDescription}
+  footerLinks={siteSettings.footerLinks}
+  contactEmail={siteSettings.contactEmail}
+  contactPhone={siteSettings.contactPhone}
+  socialLinks={siteSettings.socialLinks}
+  copyrightText={siteSettings.copyrightText}
+/>
+  </main>
+</Layout>
